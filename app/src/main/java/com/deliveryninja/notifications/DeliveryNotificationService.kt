@@ -4,7 +4,6 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import com.deliveryninja.DeliveryNinjaApp
 import com.deliveryninja.data.models.Delivery
-import com.deliveryninja.data.models.Platform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,18 +12,17 @@ class DeliveryNotificationService : NotificationListenerService() {
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    // Map of package names to platforms
+    // Map of package names to platform string names
     private val platformPackages = mapOf(
-        "in.swiggy.deliveryapp" to Platform.SWIGGY,
-        "com.shadowfax.supplyapp" to Platform.SHADOWFAX,
-        "com.rapido.captain" to Platform.RAPIDO,
-        "com.loadshare.partner" to Platform.LOADSHARE,
-        "com.magicfleet.driver" to Platform.MAGICFLEET,
-        "com.olacabs.driver" to Platform.OLA,
-        "com.shiprocket.deliverypartner" to Platform.SHIPROCKET
+        "in.swiggy.deliveryapp"          to "Swiggy",
+        "com.shadowfax.supplyapp"         to "Shadowfax",
+        "com.rapido.captain"              to "Rapido",
+        "com.loadshare.partner"           to "Loadshare",
+        "com.magicfleet.driver"           to "MagicFleet",
+        "com.olacabs.driver"              to "Ola",
+        "com.shiprocket.deliverypartner"  to "Shiprocket"
     )
 
-    // Earnings patterns per platform
     private val earningsPatterns = listOf(
         Regex("₹\\s*(\\d+(?:\\.\\d{1,2})?)"),
         Regex("Rs\\.?\\s*(\\d+(?:\\.\\d{1,2})?)"),
@@ -34,51 +32,40 @@ class DeliveryNotificationService : NotificationListenerService() {
     )
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
-        val packageName = sbn.packageName
-        val platform = platformPackages[packageName] ?: return
+        val platformName = platformPackages[sbn.packageName] ?: return
 
         val extras = sbn.notification.extras
-        val title = extras.getString("android.title") ?: ""
-        val text = extras.getString("android.text") ?: ""
+        val title   = extras.getString("android.title") ?: ""
+        val text    = extras.getString("android.text") ?: ""
         val bigText = extras.getCharSequence("android.bigText")?.toString() ?: ""
-
         val fullText = "$title $text $bigText"
 
-        // Check if it's an earnings/order completion notification
         if (isEarningsNotification(fullText)) {
             val earnings = extractEarnings(fullText)
             if (earnings > 0) {
-                saveDeliveryFromNotification(platform, earnings, fullText)
+                scope.launch {
+                    val delivery = Delivery(
+                        platformName = platformName,
+                        earnings = earnings,
+                        notes = "Auto-captured: ${fullText.take(150)}"
+                    )
+                    DeliveryNinjaApp.getInstance().repository.addDelivery(delivery)
+                }
             }
         }
     }
 
     private fun isEarningsNotification(text: String): Boolean {
-        val keywords = listOf(
-            "delivered", "completed", "earned", "payment", "credited",
-            "order complete", "delivery done", "trip ended", "₹", "Rs."
-        )
-        return keywords.any { text.lowercase().contains(it.lowercase()) }
+        val keywords = listOf("delivered","completed","earned","payment","credited",
+            "order complete","delivery done","trip ended","₹","Rs.")
+        return keywords.any { text.contains(it, ignoreCase = true) }
     }
 
     private fun extractEarnings(text: String): Double {
         for (pattern in earningsPatterns) {
             val match = pattern.find(text)
-            if (match != null) {
-                return match.groupValues[1].toDoubleOrNull() ?: 0.0
-            }
+            if (match != null) return match.groupValues[1].toDoubleOrNull() ?: 0.0
         }
         return 0.0
-    }
-
-    private fun saveDeliveryFromNotification(platform: Platform, earnings: Double, rawText: String) {
-        scope.launch {
-            val delivery = Delivery(
-                platform = platform.name,
-                earnings = earnings,
-                notes = "Auto-captured: $rawText".take(200)
-            )
-            DeliveryNinjaApp.getInstance().repository.addDelivery(delivery)
-        }
     }
 }
