@@ -30,7 +30,7 @@ fun AssistantScreen(viewModel: MainViewModel, paddingValues: PaddingValues) {
     val todayEarnings by viewModel.todayEarnings.collectAsState()
     val weekEarnings by viewModel.weekEarnings.collectAsState()
     val monthEarnings by viewModel.monthEarnings.collectAsState()
-    val todayCount by viewModel.todayDeliveryCount.collectAsState()
+    val todayCount by viewModel.todayCount.collectAsState()
     val netEarnings by viewModel.todayNetEarnings.collectAsState()
     val platformEarnings by viewModel.platformEarnings.collectAsState()
 
@@ -63,8 +63,8 @@ fun AssistantScreen(viewModel: MainViewModel, paddingValues: PaddingValues) {
                     "No platform data yet. Add some deliveries first!"
                 } else {
                     val top = platformEarnings.maxByOrNull { it.total }
-                    val breakdown = platformEarnings.joinToString("\n") { "• ${it.platform}: ₹${String.format("%.0f", it.total)}" }
-                    "🏆 Best platform this month: ${top?.platform}\n\nBreakdown:\n$breakdown"
+                    val breakdown = platformEarnings.joinToString("\n") { "• ${it.platformName}: ₹${String.format("%.0f", it.total)}" }
+                    "🏆 Best platform this month: ${top?.platformName}\n\nBreakdown:\n$breakdown"
                 }
             }
 
@@ -81,7 +81,7 @@ fun AssistantScreen(viewModel: MainViewModel, paddingValues: PaddingValues) {
                 "📦 Today you've completed $todayCount deliveries"
 
             q.contains("average") || q.contains("per delivery") ->
-                if (todayCount > 0) "📊 Today's avg per delivery: ₹${String.format("%.0f", todayEarnings / todayCount)}"
+                if (todayCount > 0) "📊 Today's avg per delivery: ₹${String.format("%.0f", todayEarnings / todayCount.toDouble())}"
                 else "No deliveries today yet!"
 
             q.contains("heatmap") || q.contains("map") || q.contains("zone") ->
