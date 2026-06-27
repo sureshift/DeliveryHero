@@ -1,0 +1,2 @@
+-keep class com.deliverymitra.** { *; }
+-dontwarn org.osmdroid.**

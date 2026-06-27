@@ -1,0 +1,75 @@
+name: Build DeliveryMitra APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace
+
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: DeliveryMitra-Debug-APK
+        path: app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+
+    - name: Create Release
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        name: DeliveryMitra v1.0.${{ github.run_number }}
+        body: |
+          ## DeliveryMitra APK
+          
+          ### Install Instructions:
+          1. Download `app-debug.apk` below
+          2. On your Android phone: Settings → Security → Allow unknown sources
+          3. Open the downloaded APK and install
+          
+          ### What's included:
+          - 📊 Earnings tracker (Swiggy, Shadowfax, Rapido, Loadshare, MagicFleet, Ola, Shiprocket)
+          - 🔔 Auto-capture from delivery app notifications
+          - 🗺️ Delivery location map
+          - 🎯 Goals & progress tracking
+          - 💰 Expense tracking (fuel, maintenance)
+          - 🤖 Mitra AI assistant
+        files: |
+          app/build/outputs/apk/debug/app-debug.apk
+          app/build/outputs/apk/release/app-release-unsigned.apk
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
