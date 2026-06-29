@@ -498,3 +498,17 @@ fun AddCustomerDialog(onDismiss: () -> Unit, onAdd: (String, String, String, Dou
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     )
 }
+
+// Shared text field style for dark theme - used across all screens
+@Composable
+fun ninjaTextFieldColors() = OutlinedTextFieldDefaults.colors(
+    focusedBorderColor      = com.deliveryninja.ui.theme.NinjaOrange,
+    unfocusedBorderColor    = com.deliveryninja.ui.theme.NinjaGray.copy(alpha = 0.3f),
+    focusedLabelColor       = com.deliveryninja.ui.theme.NinjaOrange,
+    unfocusedLabelColor     = com.deliveryninja.ui.theme.NinjaGray,
+    cursorColor             = com.deliveryninja.ui.theme.NinjaOrange,
+    focusedTextColor        = com.deliveryninja.ui.theme.NinjaWhite,
+    unfocusedTextColor      = com.deliveryninja.ui.theme.NinjaWhite,
+    unfocusedContainerColor = com.deliveryninja.ui.theme.NinjaCardLight,
+    focusedContainerColor   = com.deliveryninja.ui.theme.NinjaCardLight
+)
