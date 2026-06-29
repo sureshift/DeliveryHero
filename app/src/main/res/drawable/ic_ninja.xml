@@ -7,17 +7,17 @@
 
     <!-- Background circle - dark -->
     <path
-        android:fillColor="#1A1A2E"
+        android:fillColor="#0F0F14"
         android:pathData="M54,54m-54,0a54,54 0,1 1,108 0a54,54 0,1 1,-108 0" />
 
     <!-- Ninja mask - orange -->
     <path
-        android:fillColor="#FC8019"
+        android:fillColor="#DB2648"
         android:pathData="M28,42 Q54,28 80,42 L80,56 Q54,68 28,56 Z" />
 
     <!-- Ninja eyes band - dark -->
     <path
-        android:fillColor="#1A1A2E"
+        android:fillColor="#0F0F14"
         android:pathData="M28,44 Q54,32 80,44 L80,52 Q54,60 28,52 Z" />
 
     <!-- Left eye -->
@@ -32,12 +32,12 @@
 
     <!-- Left eye shine -->
     <path
-        android:fillColor="#FC8019"
+        android:fillColor="#DB2648"
         android:pathData="M39,45 Q40,44 41,45 Q40,46 39,45 Z" />
 
     <!-- Right eye shine -->
     <path
-        android:fillColor="#FC8019"
+        android:fillColor="#DB2648"
         android:pathData="M65,45 Q66,44 67,45 Q66,46 65,45 Z" />
 
     <!-- Ninja body / torso -->
@@ -47,7 +47,7 @@
 
     <!-- Ninja collar / scarf - orange -->
     <path
-        android:fillColor="#FC8019"
+        android:fillColor="#DB2648"
         android:pathData="M36,66 Q54,58 72,66 L72,72 Q54,78 36,72 Z" />
 
     <!-- Left arm holding package -->
@@ -62,13 +62,13 @@
 
     <!-- Delivery box -->
     <path
-        android:fillColor="#FC8019"
+        android:fillColor="#DB2648"
         android:pathData="M14,76 L26,70 L26,84 L14,90 Z" />
     <path
-        android:fillColor="#E06010"
+        android:fillColor="#B01D38"
         android:pathData="M26,70 L38,76 L38,90 L26,84 Z" />
     <path
-        android:fillColor="#FFB366"
+        android:fillColor="#FF4D6D"
         android:pathData="M14,76 L26,70 L38,76 L26,82 Z" />
 
     <!-- Box ribbon -->
@@ -80,32 +80,32 @@
 
     <!-- Speed lines -->
     <path
-        android:strokeColor="#FC8019"
+        android:strokeColor="#DB2648"
         android:strokeWidth="2"
         android:strokeLineCap="round"
         android:pathData="M82,60 L94,60" />
     <path
-        android:strokeColor="#FC8019"
+        android:strokeColor="#DB2648"
         android:strokeWidth="1.5"
         android:strokeLineCap="round"
         android:pathData="M84,66 L93,66" />
     <path
-        android:strokeColor="#FC8019"
+        android:strokeColor="#DB2648"
         android:strokeWidth="1"
         android:strokeLineCap="round"
         android:pathData="M86,72 L92,72" />
 
     <!-- Ninja headband knot -->
     <path
-        android:fillColor="#E06010"
+        android:fillColor="#B01D38"
         android:pathData="M50,28 Q54,24 58,28 L58,34 Q54,38 50,34 Z" />
 
     <!-- Headband tails -->
     <path
-        android:fillColor="#FC8019"
+        android:fillColor="#DB2648"
         android:pathData="M50,30 L42,22 L44,20 L52,30 Z" />
     <path
-        android:fillColor="#FC8019"
+        android:fillColor="#DB2648"
         android:pathData="M58,30 L66,22 L64,20 L56,30 Z" />
 
 </vector>
